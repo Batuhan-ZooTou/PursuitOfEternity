@@ -1,0 +1,4 @@
+repository "PursuitOfEternity@berantk@cloud"
+  path "/"
+    br "/main"
+    co "/main"
