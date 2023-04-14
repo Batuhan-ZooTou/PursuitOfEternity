@@ -21,12 +21,14 @@ public class PlayerController : MonoBehaviour
     float xRot = 0f;
     float yRot = 0f;
     public Transform cameraTransform;
+    MouseLook look;
 
 
 
     private void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
+        look=FindObjectOfType<MouseLook>();
     }
     private void Update()
     {
@@ -42,20 +44,6 @@ public class PlayerController : MonoBehaviour
         PlayerMovement();
         FixedJump();
     }
-    void MouseMove()
-    {
-        float mouseX = Input.GetAxis("Mouse X") * 232 * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * 232 * Time.deltaTime;
-
-        xRot -= mouseY;
-        xRot = Mathf.Clamp(xRot, -90f, 90f);
-
-        cameraTransform.transform.localRotation = Quaternion.Euler(xRot, 0f, 0f);
-        transform.Rotate(Vector3.up * mouseX);
-        transform.Rotate(Vector3.right * mouseY);
-    }
-
-
     private void Inputs()
     {
         moveX = Input.GetAxis("Horizontal");
@@ -110,12 +98,14 @@ public class PlayerController : MonoBehaviour
             if (!isCrouching)
             {
                 transform.localScale = new Vector3(.2f, .1f, .2f);
+                look.offset=new Vector3(0,0.2f,0);
                 isCrouching = true;
             }
 
             else
             {
                 transform.localScale = new Vector3(.2f, .2f, .2f);
+                look.offset=new Vector3(0,0.4f,0);
                 isCrouching = false;
             }
         }
