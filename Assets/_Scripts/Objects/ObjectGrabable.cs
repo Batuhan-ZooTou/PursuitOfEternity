@@ -11,6 +11,8 @@ public class ObjectGrabable : MonoBehaviour
     public float moveSpeed;
     public bool snapped;
     //public float socketspeed;
+
+    
     private void Awake()
     {
         objectRigidbody = GetComponent<Rigidbody>();
@@ -67,8 +69,8 @@ public class ObjectGrabable : MonoBehaviour
         }
         if (insideSocket)
         {
-           //transform.position = Vector3.Lerp(transform.position, socket.transform.position, socketspeed);
-           //transform.rotation = Quaternion.Lerp(transform.rotation, socket.transform.rotation, socketspeed);
+            //transform.position = Vector3.Lerp(transform.position, socket.transform.position, socketspeed);
+            //transform.rotation = Quaternion.Lerp(transform.rotation, socket.transform.rotation, socketspeed);
         }
 
     }
