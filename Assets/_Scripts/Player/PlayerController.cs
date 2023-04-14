@@ -16,11 +16,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool isGrounded;
     public bool isCrouching = false;
     private bool isMoving;
-
-
-    float xRot = 0f;
-    float yRot = 0f;
-    public Transform cameraTransform;
     MouseLook look;
 
 
@@ -28,7 +23,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
-        look=FindObjectOfType<MouseLook>();
+        look = FindObjectOfType<MouseLook>();
     }
     private void Update()
     {
@@ -98,14 +93,14 @@ public class PlayerController : MonoBehaviour
             if (!isCrouching)
             {
                 transform.localScale = new Vector3(.2f, .1f, .2f);
-                look.offset=new Vector3(0,0.2f,0);
+                look.offset = new Vector3(0, 0.2f, 0);
                 isCrouching = true;
             }
 
             else
             {
                 transform.localScale = new Vector3(.2f, .2f, .2f);
-                look.offset=new Vector3(0,0.4f,0);
+                look.offset = new Vector3(0, 0.4f, 0);
                 isCrouching = false;
             }
         }

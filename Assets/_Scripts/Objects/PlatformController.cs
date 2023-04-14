@@ -20,6 +20,10 @@ public class PlatformController : MonoBehaviour
         {
             platformPos.DOMove(platformTargetVector, moveTime);
         }
+        if (other.gameObject.CompareTag("interactableCube"))
+        {
+            platformPos.DOMove(platformTargetVector, moveTime);
+        }
     }
 
     private void OnCollisionEnter(Collision other)
@@ -28,7 +32,11 @@ public class PlatformController : MonoBehaviour
         {
             platformPos.DOMove(platformTargetVector, moveTime);
         }
+        if (other.gameObject.CompareTag("interactableCube"))
+        {
+            platformPos.DOMove(platformTargetVector, moveTime);
+        }
     }
-   
+
 
 }
