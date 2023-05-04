@@ -65,7 +65,7 @@ public class ObjectGrabable : MonoBehaviour
             Vector3 DirectionToPoint = objectGrabPointTransform.position - transform.position;
             float DistanceToPoint = DirectionToPoint.magnitude;
 
-            objectRigidbody.velocity = DirectionToPoint.normalized * moveSpeed * DistanceToPoint;
+            objectRigidbody.velocity = DirectionToPoint.normalized * moveSpeed * DistanceToPoint*Time.fixedDeltaTime;
         }
         if (insideSocket)
         {

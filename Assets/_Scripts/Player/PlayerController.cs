@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
@@ -17,9 +18,13 @@ public class PlayerController : MonoBehaviour
     public bool isCrouching = false;
     private bool isMoving;
     MouseLook look;
-
-
-
+    public Interactor interactor;
+    private Vector2 move; 
+    RaycastHit[] groundHits = new RaycastHit[2];
+    public void OnMove(InputAction.CallbackContext context)
+    {
+        move = context.ReadValue<Vector2>();
+    }
     private void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
@@ -28,16 +33,53 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         Inputs();
+        CheckForGround();
         UpdateJump();
         Crouch();
-        //MouseMove();
-
     }
+   
+    private void CheckForGround()
+    {
+        if (Physics.Raycast(groundCheck.position, Vector3.down, out RaycastHit hit, groundDistance, groundMask))
+        {
+            Debug.Log(hit.transform.name);
+            ObjectGrabable objectUnder;
+            if (hit.transform.TryGetComponent(out objectUnder))
+            {
+                if (objectUnder == interactor.grabbedObject)
+                {
+                    int hitCount = Physics.RaycastNonAlloc(groundCheck.position, Vector3.down, groundHits,groundDistance, groundMask);
+                    if (hitCount >= 2)
+                    {
+                        isGrounded = true;
+        
+                    }
+                    else
+                    {
+                        isGrounded = false;
+                    }
+                }
+                else
+                {
+                    isGrounded = true;
+        
+                }
+            }
+            else
+            {
+                isGrounded = true;
+            }
+        }
+        else
+        {
+            isGrounded = false;
+        }
+    }   
     private void FixedUpdate()
     {
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        //isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
         PlayerMovement();
-        FixedJump();
+        //FixedJump();
     }
     private void Inputs()
     {
@@ -50,7 +92,7 @@ public class PlayerController : MonoBehaviour
     private void PlayerMovement()
     {
         //if (!isGrounded) return;
-        Vector3 moveVector = new Vector3(moveX * moveSpeed * Time.fixedDeltaTime, rigidbody.velocity.y, moveZ * moveSpeed * Time.fixedDeltaTime);
+        Vector3 moveVector = new Vector3(move.x * moveSpeed * Time.fixedDeltaTime, rigidbody.velocity.y, move.y * moveSpeed * Time.fixedDeltaTime);
         moveVector = transform.TransformDirection(moveVector);
         rigidbody.velocity = moveVector;
 
@@ -83,7 +125,7 @@ public class PlayerController : MonoBehaviour
         }
 
 
-        isGrounded = Physics.CheckSphere(groundCheck.position, 0.1f, groundMask);
+        //isGrounded = Physics.CheckSphere(groundCheck.position, 0.1f, groundMask);
     }
     private void Crouch()
     {
@@ -104,5 +146,9 @@ public class PlayerController : MonoBehaviour
                 isCrouching = false;
             }
         }
+    }
+    private void OnDrawGizmos()
+    {
+        Debug.DrawRay(transform.position, Vector3.down*groundDistance, Color.green);
     }
 }
