@@ -1,0 +1,23 @@
+{
+  "prompt_text": "a smooth sheet of stainless steel with a shiny, reflective finish, slight grunge and roughness variation",
+  "patch": {
+    "ext": "png",
+    "dtype": "uint8",
+    "width": 512,
+    "height": 512,
+    "url": "https://static-dev.withpoly.com/v3/textures/patches/b408cf41-7f88-471f-846d-36345109a286.png",
+    "patch_id": "ZfBW3y2DhA"
+  },
+  "seamless_prompt_text": "a smooth sheet of stainless steel with a shiny, reflective finish, slight grunge and roughness variation",
+  "seamless_patch_scale": 0.87,
+  "upscale_prompt_text": "a smooth sheet of stainless steel with a shiny, reflective finish, slight grunge and roughness variation",
+  "upscale_resolution": 2048,
+  "is_seamless": true,
+  "pbr_mode": "polished",
+  "pbr_generate_color": true,
+  "pbr_generate_normal": true,
+  "pbr_generate_height": true,
+  "pbr_generate_ao": true,
+  "pbr_generate_roughness": true,
+  "pbr_generate_metallic": true
+}

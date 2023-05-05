@@ -1,0 +1,22 @@
+{
+  "prompt_text": "white lab walls for unity game",
+  "patch": {
+    "ext": "png",
+    "dtype": "uint8",
+    "width": 512,
+    "height": 512,
+    "url": "https://static.withpoly.com/v3-voronoi/textures/patches/b93d91dc-2142-472f-8e3d-390fa33dd453.png",
+    "patch_id": "WaMiRzUWZZ"
+  },
+  "seamless_prompt_text": "white lab walls for unity game",
+  "seamless_patch_scale": 0.8,
+  "upscale_prompt_text": "white lab walls for unity game",
+  "upscale_resolution": 1024,
+  "is_seamless": true,
+  "pbr_mode": "matte",
+  "pbr_generate_color": true,
+  "pbr_generate_normal": true,
+  "pbr_generate_height": true,
+  "pbr_generate_ao": true,
+  "pbr_generate_roughness": true
+}
