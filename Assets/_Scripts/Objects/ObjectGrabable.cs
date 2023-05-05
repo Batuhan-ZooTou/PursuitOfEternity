@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using DG.Tweening;
 public class ObjectGrabable : MonoBehaviour
 {
     private Rigidbody objectRigidbody;
@@ -61,6 +61,7 @@ public class ObjectGrabable : MonoBehaviour
     }
     public void LockOnSocket(Socket _socket)
     {
+        objectRigidbody.velocity = Vector3.zero;
         socket = _socket;
         insideSocket = true;
         this.objectGrabPointTransform = null;
@@ -87,8 +88,8 @@ public class ObjectGrabable : MonoBehaviour
         }
         if (insideSocket)
         {
-            transform.position = Vector3.Lerp(transform.position, socket.transform.position, socketspeed);
-            transform.rotation = Quaternion.Lerp(transform.rotation, socket.transform.rotation, socketspeed);
+            transform.DOMove(socket.transform.position, socketspeed);
+            transform.DORotate(socket.transform.eulerAngles, socketspeed);
         }
 
     }
