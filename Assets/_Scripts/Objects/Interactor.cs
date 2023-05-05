@@ -42,8 +42,8 @@ public class Interactor : MonoBehaviour
             //dropping with lmb
             if (grabbedObject != null)
             {
-                grabbedObject.Drop();
                 Physics.IgnoreCollision(player, grabbedObject.GetComponent<Collider>(), false);
+                grabbedObject.Drop();
                 grabbedObject = null;
                 //playerlayer.whatIsGround |= (1 << 3);
             }
@@ -55,7 +55,7 @@ public class Interactor : MonoBehaviour
                     hit.transform.TryGetComponent(out grabbedObject);
                     Physics.IgnoreCollision(player, grabbedObject.GetComponent<Collider>(), true);
                     objectGrabPointTransform.position = defaultGrabPoint;
-                    grabbedObject.Grab(objectGrabPointTransform);
+                    grabbedObject.Grab(objectGrabPointTransform,this);
                     //playerlayer.whatIsGround &= ~(1 << 3);
                 }
 
@@ -70,9 +70,9 @@ public class Interactor : MonoBehaviour
             //throwing with rmb
             if (grabbedObject != null)
             {
-                grabbedObject.Drop();
                 grabbedObject.ThrowObject(cam, throwForce);
                 Physics.IgnoreCollision(player, grabbedObject.GetComponent<Collider>(), false);
+                grabbedObject.Drop();
                 grabbedObject = null;
                 //playerlayer.whatIsGround |= (1 << 3);
             }
@@ -106,14 +106,14 @@ public class Interactor : MonoBehaviour
         //adjusting the distance wiht mouse wheel
         if (grabbedObject != null)
         {
-            if (mouseScrollY > 0f && Vector3.Distance(objectGrabPointTransform.position, cam.position) < interactDistance) // forward
-            {
-                objectGrabPointTransform.position += cam.forward * Time.deltaTime * grabPointSpeed;
-            }
-            else if (mouseScrollY < 0f && Vector3.Distance(objectGrabPointTransform.position, cam.position) > holdDistance) // backwards
-            {
-                objectGrabPointTransform.position -= cam.forward * Time.deltaTime * grabPointSpeed;
-            }
+            //if (mouseScrollY > 0f && Vector3.Distance(objectGrabPointTransform.position, cam.position) < interactDistance) // forward
+            //{
+            //    objectGrabPointTransform.position += cam.forward * Time.deltaTime * grabPointSpeed;
+            //}
+            //else if (mouseScrollY < 0f && Vector3.Distance(objectGrabPointTransform.position, cam.position) > holdDistance) // backwards
+            //{
+            //    objectGrabPointTransform.position -= cam.forward * Time.deltaTime * grabPointSpeed;
+            //}
             //adjusting the point while near walls
             if (Physics.Raycast(cam.position, cam.forward, out RaycastHit raycastHit, Vector3.Distance(cam.position, objectGrabPointTransform.position), solidLayerMask))
             {
@@ -137,43 +137,50 @@ public class Interactor : MonoBehaviour
     }
     void CheckForInteractables()
     {
-        ray = new Ray(cam.transform.position, cam.transform.forward);
-        if (Physics.Raycast(ray, out hit, interactDistance, interactables))
+        if (grabbedObject != null)
         {
-            Interactable pastInteractable;
-            //There is Interactable object
-            if (Interactable != null)
+            Interactable pastInteractable = Interactable.GetComponent<Interactable>();
+            Interactable = grabbedObject.GetComponent<Interactable>();
+            if (pastInteractable != Interactable)
             {
-                //check if 2 object is not highlighted at the same time
-                pastInteractable = Interactable;
-                hit.transform.TryGetComponent(out Interactable);
-                if (pastInteractable != Interactable)
-                {
-                    pastInteractable.transform.GetComponent<Renderer>().material.SetFloat("_OutlineWidth", 0.0f);
-                    Interactable.transform.GetComponent<Renderer>().material.SetFloat("_OutlineWidth", 0.1f);
-                }
-                return;
+                pastInteractable.transform.GetComponent<MeshRenderer>().material.SetFloat("_Scale", 0f);
             }
-            hit.transform.TryGetComponent(out Interactable);
-            //Highlight it
-            Interactable.transform.GetComponent<Renderer>().material.SetFloat("_OutlineWidth", 0.1f);
-            //UI
-
+            Interactable.transform.GetComponent<MeshRenderer>().material.SetFloat("_Scale", 0f);
         }
-        else if (Interactable != null)
+        else
         {
-            //Cant interact while grabing another object
-            if (grabbedObject != null)
+            ray = new Ray(cam.transform.position, cam.transform.forward);
+            if (Physics.Raycast(ray, out hit, interactDistance, interactables))
             {
-                return;
+                Interactable pastInteractable;
+                //There is Interactable object
+                if (Interactable != null)
+                {
+                    //check if 2 object is not highlighted at the same time
+                    pastInteractable = Interactable;
+                    hit.transform.TryGetComponent(out Interactable);
+                    if (pastInteractable != Interactable)
+                    {
+                        pastInteractable.transform.GetComponent<MeshRenderer>().material.SetFloat("_Scale", 0f);
+                        Interactable.transform.GetComponent<MeshRenderer>().material.SetFloat("_Scale", 1.03f);
+                    }
+                    else if (pastInteractable == Interactable)
+                    {
+                        Interactable.transform.GetComponent<MeshRenderer>().material.SetFloat("_Scale", 1.03f);
+                    }
+                    return;
+                }
+                hit.transform.TryGetComponent(out Interactable);
+                //Highlight it
+                Interactable.transform.GetComponent<MeshRenderer>().material.SetFloat("_Scale", 1.03f);
+                //UI
+
             }
-            //deHighlight when not looking
-            else
+            else if (Interactable != null)
             {
-                Interactable.transform.GetComponent<Renderer>().material.SetFloat("_OutlineWidth", 0f);
+                Interactable.transform.GetComponent<MeshRenderer>().material.SetFloat("_Scale", 0f);
                 Interactable = null;
             }
-
         }
     }
     private void OnDrawGizmos()

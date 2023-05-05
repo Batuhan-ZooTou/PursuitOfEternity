@@ -8,6 +8,7 @@ TagManager:
   - firstButton
   - Socket1
   - interactableCube
+  - WeightButton
   layers:
   - Default
   - TransparentFX

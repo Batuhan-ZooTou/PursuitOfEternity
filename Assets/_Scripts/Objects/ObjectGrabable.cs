@@ -6,19 +6,35 @@ public class ObjectGrabable : MonoBehaviour
 {
     private Rigidbody objectRigidbody;
     private Transform objectGrabPointTransform;
-    //private Socket socket;
+    private Socket socket;
+    Interactor player;
     public bool insideSocket;
     public float moveSpeed;
     public bool snapped;
-    //public float socketspeed;
+    public float socketspeed;
+    private Vector3 spawnPosition;
 
     
     private void Awake()
     {
         objectRigidbody = GetComponent<Rigidbody>();
+        spawnPosition = transform.position;
     }
-    public void Grab(Transform objectGrabPointTransform)
+    public void ResetPosition()
     {
+        Debug.Log("tp");
+        if (player!=null)
+        {
+            Drop();
+        }
+        objectRigidbody.velocity = Vector3.zero;
+        transform.position = spawnPosition;
+        transform.rotation = Quaternion.Euler(Vector3.zero);
+
+    }
+    public void Grab(Transform objectGrabPointTransform, Interactor _player)
+    {
+        player = _player;
         //Physics.IgnoreLayerCollision(3, 6, true);
         if (insideSocket)
         {
@@ -34,6 +50,8 @@ public class ObjectGrabable : MonoBehaviour
     public void Drop()
     {
         //Physics.IgnoreLayerCollision(3, 6, false);
+        player.grabbedObject = null;
+        player = null;
         this.objectGrabPointTransform = null;
         if (snapped)
         {
@@ -41,13 +59,13 @@ public class ObjectGrabable : MonoBehaviour
         }
         objectRigidbody.useGravity = true;
     }
-    //public void LockOnSocket(Socket _socket)
-    //{
-    //    socket = _socket;
-    //    insideSocket = true;
-    //    this.objectGrabPointTransform = null;
-    //    objectRigidbody.isKinematic = true;
-    //}
+    public void LockOnSocket(Socket _socket)
+    {
+        socket = _socket;
+        insideSocket = true;
+        this.objectGrabPointTransform = null;
+        objectRigidbody.isKinematic = true;
+    }
     public void ThrowObject(Transform playerCameraTransform, float throwForce)
     {
         objectRigidbody.AddForce(playerCameraTransform.forward * throwForce);
@@ -69,8 +87,8 @@ public class ObjectGrabable : MonoBehaviour
         }
         if (insideSocket)
         {
-            //transform.position = Vector3.Lerp(transform.position, socket.transform.position, socketspeed);
-            //transform.rotation = Quaternion.Lerp(transform.rotation, socket.transform.rotation, socketspeed);
+            transform.position = Vector3.Lerp(transform.position, socket.transform.position, socketspeed);
+            transform.rotation = Quaternion.Lerp(transform.rotation, socket.transform.rotation, socketspeed);
         }
 
     }

@@ -42,7 +42,6 @@ public class PlayerController : MonoBehaviour
     {
         if (Physics.Raycast(groundCheck.position, Vector3.down, out RaycastHit hit, groundDistance, groundMask))
         {
-            Debug.Log(hit.transform.name);
             ObjectGrabable objectUnder;
             if (hit.transform.TryGetComponent(out objectUnder))
             {
