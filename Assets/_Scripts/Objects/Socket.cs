@@ -12,6 +12,7 @@ public class Socket : MonoBehaviour
     public float moveTime;
     public bool active;
     public float[] platformDelays;
+    public Transform holeTransform;
     private void Start()
     {
         for (int i = 0; i < platformPos.Count; i++)

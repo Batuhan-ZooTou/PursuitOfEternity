@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class ObjectGrabable : MonoBehaviour
 {
@@ -68,6 +69,8 @@ public class ObjectGrabable : MonoBehaviour
         insideSocket = true;
         this.objectGrabPointTransform = null;
         objectRigidbody.isKinematic = true;
+        transform.DOMove(socket.holeTransform.position, socketspeed);
+        transform.DORotate(socket.holeTransform.eulerAngles, socketspeed);
     }
     public void ThrowObject(Transform playerCameraTransform, float throwForce)
     {
@@ -88,11 +91,5 @@ public class ObjectGrabable : MonoBehaviour
 
             objectRigidbody.velocity = DirectionToPoint.normalized * moveSpeed * DistanceToPoint*Time.fixedDeltaTime;
         }
-        if (insideSocket)
-        {
-            transform.position = Vector3.Lerp(transform.position, socket.transform.position, socketspeed);
-            transform.rotation = Quaternion.Lerp(transform.rotation, socket.transform.rotation, socketspeed);
-        }
-
     }
 }

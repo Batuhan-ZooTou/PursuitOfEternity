@@ -11,35 +11,74 @@ public class ButtonPress : MonoBehaviour
     private List<Vector3> platformStartVector = new List<Vector3>();
     public float moveTime;
     public bool isActive = false;
-    public float[] platformDelays;
-
+    public float[] platformCloseDelays;
+    public float[] platformStartDelays;
+    public float activeTime;
+    private float activeCounter;
+    public bool hasTimer;
     private void Start()
     {
+        activeCounter = activeTime;
         for (int i = 0; i < platformPos.Count; i++)
         {
             platformTargetVector.Add(platformTargetPos[i].position);
             platformStartVector.Add(platformPos[i].position);
         }
     }
-
+    private void Update()
+    {
+        if (hasTimer)
+        {
+            if (isActive)
+            {
+                activeCounter -= Time.deltaTime;
+                if (activeCounter <= 0)
+                {
+                    isActive = false;
+                    activeCounter = activeTime;
+                    for (int i = 0; i < platformPos.Count; i++)
+                    {
+                        float delay = i < platformCloseDelays.Length ? platformCloseDelays[i] : 0f;
+                        platformPos[i].DOMove(platformStartVector[i], moveTime).SetDelay(delay);
+                    }
+                }
+            }
+        }
+    }
     public void Pressed()
     {
-        isActive = !isActive;
-        if (isActive)
+        if (!hasTimer)
         {
-            for (int i = 0; i < platformPos.Count; i++)
+            isActive = !isActive;
+            if (isActive)
             {
-                    float delay = i < platformDelays.Length ? platformDelays[i] : 0f;
-                platformPos[i].DOMove(platformTargetVector[i], moveTime).SetDelay(delay);
+                for (int i = 0; i < platformPos.Count; i++)
+                {
+                    float delay = i < platformStartDelays.Length ? platformStartDelays[i] : 0f;
+                    platformPos[i].DOMove(platformTargetVector[i], moveTime).SetDelay(delay);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < platformPos.Count; i++)
+                {
+                    float delay = i < platformCloseDelays.Length ? platformCloseDelays[i] : 0f;
+                    platformPos[i].DOMove(platformStartVector[i], moveTime).SetDelay(delay);
+                }
             }
         }
         else
         {
-            for (int i = 0; i < platformPos.Count; i++)
+            if (!isActive)
             {
-                    float delay = i < platformDelays.Length ? platformDelays[i] : 0f;
-                platformPos[i].DOMove(platformStartVector[i], moveTime).SetDelay(delay);
+                isActive = !isActive;
+                for (int i = 0; i < platformPos.Count; i++)
+                {
+                    float delay = i < platformStartDelays.Length ? platformStartDelays[i] : 0f;
+                    platformPos[i].DOMove(platformTargetVector[i], moveTime).SetDelay(delay);
+                }
             }
         }
+        
     }
 }
