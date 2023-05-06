@@ -40,7 +40,7 @@ public class ObjectGrabable : MonoBehaviour
         {
             insideSocket = false;
             objectRigidbody.isKinematic = false;
-            //socket.Close();
+            socket.DeActivate();
 
         }
         this.objectGrabPointTransform = objectGrabPointTransform;
@@ -50,8 +50,11 @@ public class ObjectGrabable : MonoBehaviour
     public void Drop()
     {
         //Physics.IgnoreLayerCollision(3, 6, false);
-        player.grabbedObject = null;
-        player = null;
+        if (player!=null)
+        {
+            player.grabbedObject = null;
+            player = null;
+        }
         this.objectGrabPointTransform = null;
         if (snapped)
         {

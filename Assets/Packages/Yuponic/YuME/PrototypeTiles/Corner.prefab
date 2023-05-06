@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 389613008466510473}
   - component: {fileID: 389613008460834515}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Corner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -60,7 +60,7 @@ GameObject:
   - component: {fileID: 1007527438130011416}
   - component: {fileID: 9200323621614497475}
   - component: {fileID: 8249603977891263062}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -294,7 +294,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1950
+  m_VersionIndex: 1968
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
