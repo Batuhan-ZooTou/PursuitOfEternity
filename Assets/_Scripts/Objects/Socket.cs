@@ -11,6 +11,7 @@ public class Socket : MonoBehaviour
     private List<Vector3> platformStartVector = new List<Vector3>();
     public float moveTime;
     public bool active;
+    public float[] platformDelays;
     private void Start()
     {
         for (int i = 0; i < platformPos.Count; i++)
@@ -21,20 +22,21 @@ public class Socket : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (active)
-        {
-            for (int i = 0; i < platformPos.Count; i++)
-            {
-                platformPos[i].DOMove(platformTargetVector[i], moveTime);
-            }
-        }
-        else
-        {
-            for (int i = 0; i < platformPos.Count; i++)
-            {
-                platformPos[i].DOMove(platformStartVector[i], moveTime);
-            }
-        }
+        //if (active)
+        //{
+        //    for (int i = 0; i < platformPos.Count; i++)
+        //    {
+        //        float delay = i < platformDelays.Length ? platformDelays[i] : 0f;
+        //        platformPos[i].DOMove(platformTargetVector[i], moveTime).SetDelay(delay);
+        //    }
+        //}
+        //else
+        //{
+        //    for (int i = 0; i < platformPos.Count; i++)
+        //    {
+        //        platformPos[i].DOMove(platformStartVector[i], moveTime);
+        //    }
+        //}
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -45,11 +47,21 @@ public class Socket : MonoBehaviour
                 active = true;
                 key.LockOnSocket(this);
                 key.Drop();
+                for (int i = 0; i < platformPos.Count; i++)
+                {
+                    float delay = i < platformDelays.Length ? platformDelays[i] : 0f;
+                    platformPos[i].DOMove(platformTargetVector[i], moveTime).SetDelay(delay);
+                }
             }
         }
     }
     public void DeActivate()
     {
+        for (int i = 0; i < platformPos.Count; i++)
+        {
+            float delay = i < platformDelays.Length ? platformDelays[i] : 0f;
+            platformPos[i].DOMove(platformStartVector[i], moveTime).SetDelay(delay);
+        }
         StartCoroutine(Delay());
 
     }
