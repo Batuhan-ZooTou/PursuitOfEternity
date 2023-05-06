@@ -10,6 +10,7 @@ public class WeightButton : MonoBehaviour
     private List<Vector3> platformTargetVector = new List<Vector3>();
     private List<Vector3> platformStartVector = new List<Vector3>();
     public float moveTime;
+    public float[] platformDelays;
     public bool isActive = false;
 
     private void Start()
@@ -36,7 +37,7 @@ public class WeightButton : MonoBehaviour
             //back to start position
 
         }
-        
+
     }
     private void OnTriggerExit(Collider other)
     {
@@ -48,9 +49,11 @@ public class WeightButton : MonoBehaviour
             {
                 for (int i = 0; i < platformPos.Count; i++)
                 {
-                    platformPos[i].DOMove(platformStartVector[i], moveTime);
+                    float delay = i < platformDelays.Length ? platformDelays[i] : 0f;
+                    platformPos[i].DOMove(platformStartVector[i], moveTime).SetDelay(delay);
                 }
             }
         }
     }
+
 }
