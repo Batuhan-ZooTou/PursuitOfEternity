@@ -1,0 +1,23 @@
+{
+  "prompt_text": "Metal Sheet photorealistic metal old metal, high definition extreme detail",
+  "patch": {
+    "ext": "png",
+    "dtype": "uint8",
+    "width": 512,
+    "height": 512,
+    "url": "https://static-dev.withpoly.com/v3-voronoi/textures/patches/0d0bfbaa-6aaa-45d0-940c-2bc64079a8b5.png",
+    "patch_id": "4bqSZDjUKg"
+  },
+  "seamless_prompt_text": "Metal Sheet photorealistic metal old metal, high definition extreme detail",
+  "seamless_patch_scale": 0.61,
+  "upscale_prompt_text": "Metal Sheet photorealistic metal old metal, high definition extreme detail",
+  "upscale_resolution": 4096,
+  "is_seamless": true,
+  "pbr_mode": "shiny",
+  "pbr_generate_color": true,
+  "pbr_generate_normal": true,
+  "pbr_generate_height": true,
+  "pbr_generate_ao": true,
+  "pbr_generate_roughness": true,
+  "pbr_generate_metallic": true
+}

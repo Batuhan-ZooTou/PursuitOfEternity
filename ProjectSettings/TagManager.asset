@@ -21,8 +21,8 @@ TagManager:
   - YuME_TileMap
   - 
   - Interactable
-  - 
-  - 
+  - NoPlayer
+  - NoCube
   - 
   - 
   - 

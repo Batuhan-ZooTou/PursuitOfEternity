@@ -456,7 +456,7 @@ MonoBehaviour:
   grabPointSpeed: 25
   interactDistance: 0.8
   holdDistance: 0.4
-  throwForce: 300
+  throwForce: 200
   interactables:
     serializedVersion: 2
     m_Bits: 1032

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.Events;
 
 public class Button : MonoBehaviour
 {
@@ -15,13 +16,16 @@ public class Button : MonoBehaviour
     public bool isActive=false;
     public float[] platformCloseDelays;
     public float[] platformStartDelays;
-
+    public UnityEvent OnPressed;
     private void Start()
     {
-        for (int i = 0; i < platformPos.Count; i++)
+        if (platformPos!=null)
         {
-            platformTargetVector.Add(platformTargetPos[i].position);
-            platformStartVector.Add(platformPos[i].position);
+            for (int i = 0; i < platformPos.Count; i++)
+            {
+                platformTargetVector.Add(platformTargetPos[i].position);
+                platformStartVector.Add(platformPos[i].position);
+            }
         }
         nonPressedPos = transform.position;
     }
@@ -29,7 +33,12 @@ public class Button : MonoBehaviour
     {
         if (collision.gameObject.TryGetComponent<Rigidbody>(out var rigidbody))
         {
+            OnPressed.Invoke();
             isActive = !isActive;
+            if (platformPos == null)
+            {
+                return;
+            }
             if (isActive)
             {
                 for (int i = 0; i < platformPos.Count; i++)
