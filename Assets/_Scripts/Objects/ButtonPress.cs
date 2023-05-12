@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.Events;
 
 public class ButtonPress : MonoBehaviour
 {
@@ -16,6 +17,8 @@ public class ButtonPress : MonoBehaviour
     public float activeTime;
     private float activeCounter;
     public bool hasTimer;
+    public UnityEvent OnPressed;
+
     private void Start()
     {
         activeCounter = activeTime;
@@ -47,6 +50,12 @@ public class ButtonPress : MonoBehaviour
     }
     public void Pressed()
     {
+        OnPressed.Invoke();
+        if (platformPos == null)
+        {
+            isActive = !isActive;
+            return;
+        }
         if (!hasTimer)
         {
             isActive = !isActive;

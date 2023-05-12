@@ -15,12 +15,20 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float fallMultiplier = 2.5f;
     [SerializeField] private float lowJumpMultiplier = 2f;
     [SerializeField] private bool isGrounded;
+    [SerializeField] private bool onGoo;
     public bool isCrouching = false;
     private bool isMoving;
     MouseLook look;
     public Interactor interactor;
     private Vector2 move; 
     RaycastHit[] groundHits = new RaycastHit[2];
+
+
+    Texture2D tex;
+    Texture text;
+    RenderTexture rText;
+    Color maskColor;
+
     public void OnMove(InputAction.CallbackContext context)
     {
         move = context.ReadValue<Vector2>();
@@ -29,6 +37,7 @@ public class PlayerController : MonoBehaviour
     {
         rigidbody = GetComponent<Rigidbody>();
         look = FindObjectOfType<MouseLook>();
+         tex = new Texture2D(1024, 1024, TextureFormat.RGB24, false);  
     }
     private void Update()
     {
@@ -37,7 +46,7 @@ public class PlayerController : MonoBehaviour
         UpdateJump();
         Crouch();
     }
-   
+
     private void CheckForGround()
     {
         if (Physics.Raycast(groundCheck.position, Vector3.down, out RaycastHit hit, groundDistance, groundMask))
@@ -74,11 +83,51 @@ public class PlayerController : MonoBehaviour
             isGrounded = false;
         }
     }   
+    public void CheckForGoo()
+    {
+        if (Physics.Raycast(groundCheck.position, Vector3.down, out RaycastHit hit, groundDistance, groundMask))
+        {
+            if (hit.collider.GetComponent<Paintable>()!=null)
+            {
+                rText = null;
+                rText = hit.collider.GetComponent<Paintable>().getMask();
+                tex = rText.toTexture2D();
+                text = hit.collider.GetComponent<MeshRenderer>().material.GetTexture("Texture2D_41271c3c5f484ca2a435c65087a81705");
+                maskColor = tex.GetPixel(Mathf.FloorToInt(hit.textureCoord.x * text.width), Mathf.FloorToInt(hit.textureCoord.y * text.height));
+                if (maskColor.r!=0)
+                {
+                    onGoo = true;
+                    Debug.Log("Red");
+                }
+                else if (maskColor.g!=0)
+                {
+                    onGoo = true;
+                    Debug.Log("green");
+                }
+                else if(maskColor.b!=0)
+                {
+                    onGoo = true;
+                    Debug.Log("blue");
+                }
+                else
+                {
+                    onGoo = false;
+                    Debug.Log("nothing");
+                }
+            }
+        }
+        else
+        {
+            onGoo = false;
+
+        }
+    }
     private void FixedUpdate()
     {
         //isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
         PlayerMovement();
         //FixedJump();
+        CheckForGoo();
     }
     private void Inputs()
     {
