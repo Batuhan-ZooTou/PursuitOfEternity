@@ -19,6 +19,7 @@ public class Interactor : MonoBehaviour
     [SerializeField] private LayerMask grabables;
     [SerializeField] public ObjectGrabable grabbedObject;
     [SerializeField] private LayerMask solidLayerMask;
+    [SerializeField] public LayerMask barrier;
 
     private Vector3 defaultGrabPoint;
     float mouseScrollY;
@@ -49,6 +50,10 @@ public class Interactor : MonoBehaviour
             }
             else if (Interactable != null)
             {
+                if (Physics.Raycast(ray, interactDistance, barrier))
+                {
+                    return;
+                }
                 //if hits grabable object
                 if (Physics.Raycast(ray, out hit, interactDistance, grabables))
                 {

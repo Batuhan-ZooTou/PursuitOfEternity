@@ -28,6 +28,11 @@ public class PlayerController : MonoBehaviour
     Texture text;
     RenderTexture rText;
     Color maskColor;
+    private bool readyToJump=true;
+    [SerializeField] private float jumpCooldown=0.2f;
+    [SerializeField] private float bounceMultiplier;
+    [SerializeField] private float decreaseBouncePercentage;
+    [SerializeField] private float thresholdYVelocity;
 
     public void OnMove(InputAction.CallbackContext context)
     {
@@ -42,7 +47,6 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         Inputs();
-        CheckForGround();
         UpdateJump();
         Crouch();
     }
@@ -60,7 +64,7 @@ public class PlayerController : MonoBehaviour
                     if (hitCount >= 2)
                     {
                         isGrounded = true;
-        
+
                     }
                     else
                     {
@@ -70,7 +74,7 @@ public class PlayerController : MonoBehaviour
                 else
                 {
                     isGrounded = true;
-        
+
                 }
             }
             else
@@ -97,6 +101,13 @@ public class PlayerController : MonoBehaviour
                 if (maskColor.r!=0)
                 {
                     onGoo = true;
+                    if ((rigidbody.velocity.y) < -thresholdYVelocity)
+                    {
+                        float currentYVelocity = Mathf.Abs(rigidbody.velocity.y) * bounceMultiplier;
+                        Debug.Log("Goo:" + currentYVelocity+"touchvelo:"+rigidbody.velocity.y);
+                        rigidbody.velocity = new Vector3(rigidbody.velocity.x, 0f, rigidbody.velocity.z);
+                        rigidbody.AddForce(transform.up * (currentYVelocity - (currentYVelocity * decreaseBouncePercentage / 100)), ForceMode.Impulse);
+                    }
                     Debug.Log("Red");
                 }
                 else if (maskColor.g!=0)
@@ -128,6 +139,7 @@ public class PlayerController : MonoBehaviour
         PlayerMovement();
         //FixedJump();
         CheckForGoo();
+        CheckForGround();
     }
     private void Inputs()
     {
@@ -150,13 +162,20 @@ public class PlayerController : MonoBehaviour
         if (isCrouching) return;
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (isGrounded)
+            if (isGrounded && readyToJump)
             {
+                readyToJump = false;
+                Invoke(nameof(ResetJump), jumpCooldown);
+                rigidbody.velocity = new Vector3(rigidbody.velocity.x, 0, rigidbody.velocity.z);
                 rigidbody.velocity = new Vector3(rigidbody.velocity.x, jumpForce, rigidbody.velocity.z);
                 isGrounded = false;
             }
 
         }
+    }
+    private void ResetJump()
+    {
+        readyToJump = true;
     }
     private void FixedJump()
     {

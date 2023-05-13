@@ -10,6 +10,7 @@ public class MousePainter : MonoBehaviour{
     public float radius = 1;
     public float strength = 1;
     public float hardness = 1;
+    public float drawRange = 5;
     //Texture2D tex;
     //Texture text;
     //RenderTexture rText;
@@ -24,7 +25,7 @@ public class MousePainter : MonoBehaviour{
             Ray ray = cam.ScreenPointToRay(position);
             RaycastHit hit;
 
-            if (Physics.Raycast(ray, out hit, 100.0f)){
+            if (Physics.Raycast(ray, out hit, drawRange)){
                 Debug.DrawRay(ray.origin, hit.point - ray.origin, Color.red);
                 transform.position = hit.point;
                 Paintable p = hit.collider.GetComponent<Paintable>();

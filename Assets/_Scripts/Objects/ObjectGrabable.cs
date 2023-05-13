@@ -80,6 +80,13 @@ public class ObjectGrabable : MonoBehaviour
     {
         if (objectGrabPointTransform != null)
         {
+            if (Physics.Raycast(transform.position,(player.cam.transform.position-transform.position).normalized,0.4f,player.barrier))
+            {
+                Debug.DrawRay(transform.position, (player.cam.transform.position - transform.position).normalized*0.4f, Color.red);
+                Drop();
+                return;
+            }
+            
             // Simple
             // float lerpSpeed=50f;
             // Vector3 newPosition = Vector3.Lerp(transform.position, objectGrabPointTransform.position, Time.deltaTime * lerpSpeed);
