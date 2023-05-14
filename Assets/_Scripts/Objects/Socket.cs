@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.Events;
 
 public class Socket : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class Socket : MonoBehaviour
     public bool active;
     public float[] platformDelays;
     public Transform holeTransform;
+    public UnityEvent OnPressed;
     private void Start()
     {
         for (int i = 0; i < platformPos.Count; i++)
@@ -45,9 +47,14 @@ public class Socket : MonoBehaviour
         {
             if (!active)
             {
+                OnPressed.Invoke();
                 active = true;
                 key.LockOnSocket(this);
                 key.Drop();
+                if (platformPos == null)
+                {
+                    return;
+                }
                 for (int i = 0; i < platformPos.Count; i++)
                 {
                     float delay = i < platformDelays.Length ? platformDelays[i] : 0f;
@@ -58,6 +65,12 @@ public class Socket : MonoBehaviour
     }
     public void DeActivate()
     {
+        OnPressed.Invoke();
+        if (platformPos == null)
+        {
+            StartCoroutine(Delay());
+            return;
+        }
         for (int i = 0; i < platformPos.Count; i++)
         {
             float delay = i < platformDelays.Length ? platformDelays[i] : 0f;

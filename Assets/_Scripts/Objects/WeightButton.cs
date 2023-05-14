@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.Events;
 
 public class WeightButton : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class WeightButton : MonoBehaviour
     private List<Vector3> platformStartVector = new List<Vector3>();
     public float moveTime;
     public bool isActive = false;
+    public UnityEvent OnPressed;
 
     private void Start()
     {
@@ -24,7 +26,12 @@ public class WeightButton : MonoBehaviour
     {
         if (other.gameObject.CompareTag("WeightButton"))
         {
+            OnPressed.Invoke();
             isActive = true;
+            if (platformPos == null)
+            {
+                return;
+            }
             //move to target position
             if (isActive)
             {
@@ -42,7 +49,12 @@ public class WeightButton : MonoBehaviour
     {
         if (other.gameObject.CompareTag("WeightButton"))
         {
+            OnPressed.Invoke();
             isActive = false;
+            if (platformPos == null)
+            {
+                return;
+            }
             //back to start position
             if (!isActive)
             {

@@ -384,6 +384,9 @@ MonoBehaviour:
   moveSpeed: 1000
   snapped: 0
   socketspeed: 1
+  bounceMultiplier: 3
+  decreaseBouncePercentage: 10
+  thresholdVelocity: 0
 --- !u!65 &2522246856781307429
 BoxCollider:
   m_ObjectHideFlags: 0

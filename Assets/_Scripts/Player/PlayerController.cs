@@ -22,7 +22,9 @@ public class PlayerController : MonoBehaviour
     public Interactor interactor;
     private Vector2 move; 
     RaycastHit[] groundHits = new RaycastHit[2];
+    public ForceMode force;
 
+    [SerializeField] float airTime;
 
     Texture2D tex;
     Texture text;
@@ -49,6 +51,7 @@ public class PlayerController : MonoBehaviour
         Inputs();
         UpdateJump();
         Crouch();
+        GetYVelocityMultiplier();
     }
 
     private void CheckForGround()
@@ -86,36 +89,31 @@ public class PlayerController : MonoBehaviour
         {
             isGrounded = false;
         }
-    }   
+    }
     public void CheckForGoo()
     {
         if (Physics.Raycast(groundCheck.position, Vector3.down, out RaycastHit hit, groundDistance, groundMask))
         {
-            if (hit.collider.GetComponent<Paintable>()!=null)
+            if (hit.collider.GetComponent<Paintable>() != null)
             {
+                Debug.Log(hit.normal);
                 rText = null;
                 rText = hit.collider.GetComponent<Paintable>().getMask();
                 tex = rText.toTexture2D();
                 text = hit.collider.GetComponent<MeshRenderer>().material.GetTexture("Texture2D_41271c3c5f484ca2a435c65087a81705");
                 maskColor = tex.GetPixel(Mathf.FloorToInt(hit.textureCoord.x * text.width), Mathf.FloorToInt(hit.textureCoord.y * text.height));
-                if (maskColor.r!=0)
+                if (maskColor.r != 0)
                 {
                     onGoo = true;
-                    if ((rigidbody.velocity.y) < -thresholdYVelocity)
-                    {
-                        float currentYVelocity = Mathf.Abs(rigidbody.velocity.y) * bounceMultiplier;
-                        Debug.Log("Goo:" + currentYVelocity+"touchvelo:"+rigidbody.velocity.y);
-                        rigidbody.velocity = new Vector3(rigidbody.velocity.x, 0f, rigidbody.velocity.z);
-                        rigidbody.AddForce(transform.up * (currentYVelocity - (currentYVelocity * decreaseBouncePercentage / 100)), ForceMode.Impulse);
-                    }
+                    rigidbody.AddForce(hit.normal * bounceMultiplier*airTime, force);
                     Debug.Log("Red");
                 }
-                else if (maskColor.g!=0)
+                else if (maskColor.g != 0)
                 {
                     onGoo = true;
                     Debug.Log("green");
                 }
-                else if(maskColor.b!=0)
+                else if (maskColor.b != 0)
                 {
                     onGoo = true;
                     Debug.Log("blue");
@@ -131,6 +129,18 @@ public class PlayerController : MonoBehaviour
         {
             onGoo = false;
 
+        }
+    }
+    public void GetYVelocityMultiplier()
+    {
+        if (!isGrounded && rigidbody.velocity.y<0)
+        {
+            airTime += Time.fixedDeltaTime;
+            airTime = Mathf.Clamp(airTime, 0, 2);
+        }
+        else if(isGrounded)
+        {
+            airTime = 0;
         }
     }
     private void FixedUpdate()

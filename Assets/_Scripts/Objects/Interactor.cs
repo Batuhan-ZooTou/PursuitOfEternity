@@ -8,6 +8,7 @@ public class Interactor : MonoBehaviour
     public Transform cam;
     [SerializeField] private Transform objectGrabPointTransform;
     public Collider player;
+    [SerializeField] private GooGun gooGun;
 
     [SerializeField] private float grabPointSpeed;
     [SerializeField] private float interactDistance;
@@ -40,6 +41,55 @@ public class Interactor : MonoBehaviour
     {
         if (context.started)
         {
+            gooGun.Shoot();
+            ////dropping with lmb
+            //if (grabbedObject != null)
+            //{
+            //    Physics.IgnoreCollision(player, grabbedObject.GetComponent<Collider>(), false);
+            //    grabbedObject.Drop();
+            //    grabbedObject = null;
+            //    //playerlayer.whatIsGround |= (1 << 3);
+            //}
+            //else if (Interactable != null)
+            //{
+            //    if (Physics.Raycast(ray, interactDistance, barrier))
+            //    {
+            //        return;
+            //    }
+            //    //if hits grabable object
+            //    if (Physics.Raycast(ray, out hit, interactDistance, grabables))
+            //    {
+            //        hit.transform.TryGetComponent(out grabbedObject);
+            //        Physics.IgnoreCollision(player, grabbedObject.GetComponent<Collider>(), true);
+            //        objectGrabPointTransform.position = defaultGrabPoint;
+            //        grabbedObject.Grab(objectGrabPointTransform,this);
+            //        //playerlayer.whatIsGround &= ~(1 << 3);
+            //    }
+            //
+            //}
+
+        }
+    }
+    public void OnRMB(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            //throwing with rmb
+            if (grabbedObject != null)
+            {
+                grabbedObject.ThrowObject(cam, throwForce);
+                Physics.IgnoreCollision(player, grabbedObject.GetComponent<Collider>(), false);
+                grabbedObject.Drop();
+                grabbedObject = null;
+                //playerlayer.whatIsGround |= (1 << 3);
+            }
+
+        }
+    }
+    public void OnInteract(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
             //dropping with lmb
             if (grabbedObject != null)
             {
@@ -60,40 +110,15 @@ public class Interactor : MonoBehaviour
                     hit.transform.TryGetComponent(out grabbedObject);
                     Physics.IgnoreCollision(player, grabbedObject.GetComponent<Collider>(), true);
                     objectGrabPointTransform.position = defaultGrabPoint;
-                    grabbedObject.Grab(objectGrabPointTransform,this);
+                    grabbedObject.Grab(objectGrabPointTransform, this);
                     //playerlayer.whatIsGround &= ~(1 << 3);
+                    return;
                 }
-
-            }
-
-        }
-    }
-    public void OnRMB(InputAction.CallbackContext context)
-    {
-        if (context.started)
-        {
-            //throwing with rmb
-            if (grabbedObject != null)
-            {
-                grabbedObject.ThrowObject(cam, throwForce);
-                Physics.IgnoreCollision(player, grabbedObject.GetComponent<Collider>(), false);
-                grabbedObject.Drop();
-                grabbedObject = null;
-                //playerlayer.whatIsGround |= (1 << 3);
-            }
-        }
-    }
-    public void OnInteract(InputAction.CallbackContext context)
-    {
-        if (context.started)
-        {
-            //if hits interacable
-            if (Interactable != null)
-            {
                 //if players hand is empty
                 onInteract = Interactable.onInteract;
                 onInteract.Invoke();
             }
+            
 
         }
     }

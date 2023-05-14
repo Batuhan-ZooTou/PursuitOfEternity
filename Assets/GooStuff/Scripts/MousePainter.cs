@@ -11,10 +11,10 @@ public class MousePainter : MonoBehaviour{
     public float strength = 1;
     public float hardness = 1;
     public float drawRange = 5;
-    //Texture2D tex;
-    //Texture text;
-    //RenderTexture rText;
-    //Color maskColor;
+    Texture2D tex;
+    Texture text;
+    RenderTexture rText;
+    Color maskColor;
     void Update(){
 
         bool click;
@@ -31,11 +31,11 @@ public class MousePainter : MonoBehaviour{
                 Paintable p = hit.collider.GetComponent<Paintable>();
                 if(p != null){
                     PaintManager.instance.paint(p, hit.point, radius, hardness, strength, paintColor);
-                    //rText = null;
-                    //rText = hit.collider.GetComponent<Paintable>().getMask();
-                    //text= hit.collider.GetComponent<MeshRenderer>().material.GetTexture("Texture2D_41271c3c5f484ca2a435c65087a81705");
-                    //tex = rText.toTexture2D();
-                    //maskColor = tex.GetPixel(Mathf.FloorToInt(hit.textureCoord.x * text.width), Mathf.FloorToInt(hit.textureCoord.y * text.height));
+                    rText = null;
+                    rText = hit.collider.GetComponent<Paintable>().getMask();
+                    text= hit.collider.GetComponent<MeshRenderer>().material.GetTexture("Texture2D_41271c3c5f484ca2a435c65087a81705");
+                    tex = rText.toTexture2D();
+                    maskColor = tex.GetPixel(Mathf.FloorToInt(hit.textureCoord.x * text.width), Mathf.FloorToInt(hit.textureCoord.y * text.height));
                 }
             }
         }
@@ -51,7 +51,7 @@ public static class ExtensionMethod
         RenderTexture.active = rTex;
 
         tex.ReadPixels(new Rect(0, 0, rTex.width, rTex.height), 0, 0);
-        //tex.Apply();
+        tex.Apply();
 
         RenderTexture.active = old_rt;
         return tex;
