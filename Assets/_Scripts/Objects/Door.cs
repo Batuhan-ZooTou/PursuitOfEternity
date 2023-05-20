@@ -10,5 +10,10 @@ public class Door : MonoBehaviour
         {
             objectGrabbable.ResetPosition();
         }
+        if (other.TryGetComponent<PlayerController>(out var player))
+        {
+            Debug.Log("Saved Progression");
+            player.checkPoint = transform;
+        }
     }
 }

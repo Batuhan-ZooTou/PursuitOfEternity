@@ -41,7 +41,10 @@ public class Interactor : MonoBehaviour
     {
         if (context.started)
         {
-            gooGun.Shoot();
+            if (gooGun!=null)
+            {
+                gooGun.Shoot();
+            }
             ////dropping with lmb
             //if (grabbedObject != null)
             //{

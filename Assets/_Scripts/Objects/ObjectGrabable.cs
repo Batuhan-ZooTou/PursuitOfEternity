@@ -30,7 +30,6 @@ public class ObjectGrabable : MonoBehaviour
     }
     public void ResetPosition()
     {
-        Debug.Log("tp");
         if (player!=null)
         {
             Drop();

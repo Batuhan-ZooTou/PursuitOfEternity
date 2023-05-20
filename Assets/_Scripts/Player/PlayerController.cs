@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
 {
     private float moveX, moveZ;
     private Rigidbody rigidbody;
+    [HideInInspector]public Transform checkPoint;
     [SerializeField] private float moveSpeed;
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private Transform groundCheck;
@@ -52,6 +53,7 @@ public class PlayerController : MonoBehaviour
         UpdateJump();
         Crouch();
         GetYVelocityMultiplier();
+
     }
 
     private void CheckForGround()
@@ -96,7 +98,6 @@ public class PlayerController : MonoBehaviour
         {
             if (hit.collider.GetComponent<Paintable>() != null)
             {
-                Debug.Log(hit.normal);
                 rText = null;
                 rText = hit.collider.GetComponent<Paintable>().getMask();
                 tex = rText.toTexture2D();
@@ -105,7 +106,12 @@ public class PlayerController : MonoBehaviour
                 if (maskColor.r != 0)
                 {
                     onGoo = true;
+                    if (airTime<0.15f)
+                    {
+                        return;
+                    }
                     rigidbody.AddForce(hit.normal * bounceMultiplier*airTime, force);
+
                     Debug.Log("Red");
                 }
                 else if (maskColor.g != 0)
@@ -131,12 +137,50 @@ public class PlayerController : MonoBehaviour
 
         }
     }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.TryGetComponent<Paintable>(out var paintable))
+        {
+            if (paintable != null)
+            {
+                if (Physics.Raycast(transform.position, (collision.contacts[0].point - transform.position).normalized, out RaycastHit raycastHit, transform.localScale.x))
+                {
+                    rText = null;
+                    rText = paintable.getMask();
+                    tex = rText.toTexture2D();
+                    text = paintable.GetComponent<MeshRenderer>().material.GetTexture("Texture2D_41271c3c5f484ca2a435c65087a81705");
+                    maskColor = tex.GetPixel(Mathf.FloorToInt(raycastHit.textureCoord.x * text.width), Mathf.FloorToInt(raycastHit.textureCoord.y * text.height));
+                    if (maskColor.r != 0)
+                    {
+                        //rigidbody.AddForce(raycastHit.normal * bounceMultiplier * airTime, force);
+
+                        Debug.Log("TouchRed");
+                    }
+                    else if (maskColor.g != 0)
+                    {
+                        rigidbody.useGravity = false;
+                        rigidbody.velocity = Vector3.zero;
+                        Debug.Log("Touchgreen");
+                    }
+                    else if (maskColor.b != 0)
+                    {
+                        Debug.Log("Touchblue");
+                    }
+                    else
+                    {
+                        Debug.Log("Touchnothing");
+                    }
+                }
+            }
+
+        }
+    }
     public void GetYVelocityMultiplier()
     {
         if (!isGrounded && rigidbody.velocity.y<0)
         {
-            airTime += Time.fixedDeltaTime;
-            airTime = Mathf.Clamp(airTime, 0, 2);
+            airTime += Time.deltaTime;
+            airTime = Mathf.Clamp(airTime, 0, 2f);
         }
         else if(isGrounded)
         {

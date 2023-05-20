@@ -453,6 +453,7 @@ MonoBehaviour:
   cam: {fileID: 0}
   objectGrabPointTransform: {fileID: 0}
   player: {fileID: 755640078}
+  gooGun: {fileID: 0}
   grabPointSpeed: 25
   interactDistance: 0.8
   holdDistance: 0.4
@@ -483,13 +484,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a6b01d0c8115e94b9b58ad612afa694, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 85
+  checkPoint: {fileID: 0}
+  moveSpeed: 75
   groundMask:
     serializedVersion: 2
     m_Bits: 136
   groundCheck: {fileID: 1582236448}
   groundDistance: 0.02
-  jumpForce: 3
+  jumpForce: 2.5
   fallMultiplier: 1
   lowJumpMultiplier: 2
   isGrounded: 0
@@ -497,7 +499,8 @@ MonoBehaviour:
   isCrouching: 0
   interactor: {fileID: 755640063}
   force: 2
+  airTime: 0
   jumpCooldown: 0.2
-  bounceMultiplier: 4
+  bounceMultiplier: 9
   decreaseBouncePercentage: 0
   thresholdYVelocity: 0.2

@@ -19,6 +19,15 @@ public class GooGun : MonoBehaviour
     [SerializeField] private float ShootCooldown;
     [SerializeField] private GameObject ProjectilePrefab;
 
+    private void OnEnable()
+    {
+        CanShoot = true;
+    }
+    private void OnDisable()
+    {
+        CanShoot = false;
+
+    }
     public void Shoot()
     {
         if (CanShoot)

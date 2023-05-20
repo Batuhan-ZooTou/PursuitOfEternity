@@ -130,8 +130,8 @@ MonoBehaviour:
   SolidLayer:
     serializedVersion: 2
     m_Bits: 128
-  projectileSpeed: 6
+  projectileSpeed: 7
   paintColor: {r: 0, g: 0, b: 0, a: 0}
-  radius: 0.4
+  radius: 0.5
   strength: 1
   hardness: 1
