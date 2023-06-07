@@ -10,14 +10,17 @@ Material:
   m_Name: Glass
   m_Shader: {fileID: -6465566751694194690, guid: 3df0da29935c5ab45a0da0f2d14fd931,
     type: 3}
-  m_ValidKeywords: []
+  m_ValidKeywords:
+  - _SURFACE_TYPE_TRANSPARENT
   m_InvalidKeywords: []
   m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
+  stringTagMap:
+    RenderType: Transparent
+  disabledShaderPasses:
+  - DepthOnly
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -41,10 +44,22 @@ Material:
     - Vector1_93e6f4763e58491d97d14dcf1979fea0: 0.5
     - Vector1_a94b41b638db4e63a6dcd9100348e971: 2
     - Vector1_e855577fa1cd4104bcc55cb88b66163c: 1
+    - _AlphaClip: 0
+    - _Blend: 0
+    - _CastShadows: 1
+    - _Cull: 2
+    - _DstBlend: 10
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _ReceiveShadows: 1
+    - _SrcBlend: 5
+    - _Surface: 1
+    - _WorkflowMode: 1
+    - _ZTest: 4
+    - _ZWrite: 0
+    - _ZWriteControl: 0
     m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 0.11764706}
+    - _Color: {r: 1, g: 1, b: 1, a: 0.19607843}
   m_BuildTextureStacks: []
 --- !u!114 &2617103402246291003
 MonoBehaviour:
