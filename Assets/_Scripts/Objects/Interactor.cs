@@ -36,6 +36,7 @@ public class Interactor : MonoBehaviour
     public void OnScrollWheel(InputAction.CallbackContext context)
     {
         mouseScrollY = context.ReadValue<Vector2>().y;
+        gooGun.SwitchType(mouseScrollY);
     }
     public void OnLMB(InputAction.CallbackContext context)
     {

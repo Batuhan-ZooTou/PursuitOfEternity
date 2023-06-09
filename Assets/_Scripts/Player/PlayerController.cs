@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 move; 
     RaycastHit[] groundHits = new RaycastHit[2];
     public ForceMode force;
+    bool onJumpPad;
 
     [SerializeField] float airTime;
 
@@ -69,6 +70,7 @@ public class PlayerController : MonoBehaviour
                     if (hitCount >= 2)
                     {
                         isGrounded = true;
+                        onJumpPad = false;
 
                     }
                     else
@@ -79,11 +81,13 @@ public class PlayerController : MonoBehaviour
                 else
                 {
                     isGrounded = true;
+                    onJumpPad = false;
 
                 }
             }
             else
             {
+                onJumpPad = false;
                 isGrounded = true;
             }
         }
@@ -206,6 +210,10 @@ public class PlayerController : MonoBehaviour
     private void PlayerMovement()
     {
         //if (!isGrounded) return;
+        if (onJumpPad)
+        {
+            return;
+        }
         Vector3 moveVector = new Vector3(move.x * moveSpeed * Time.fixedDeltaTime, rigidbody.velocity.y, move.y * moveSpeed * Time.fixedDeltaTime);
         moveVector = transform.TransformDirection(moveVector);
         rigidbody.velocity = moveVector;
@@ -266,6 +274,13 @@ public class PlayerController : MonoBehaviour
                 look.offset = new Vector3(0, 0.4f, 0);
                 isCrouching = false;
             }
+        }
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.TryGetComponent(out JumpPad pad))
+        {
+            onJumpPad = true;
         }
     }
     private void OnDrawGizmos()

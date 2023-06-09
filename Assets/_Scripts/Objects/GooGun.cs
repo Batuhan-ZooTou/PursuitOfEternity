@@ -18,6 +18,10 @@ public class GooGun : MonoBehaviour
     [SerializeField] private bool CanShoot;
     [SerializeField] private float ShootCooldown;
     [SerializeField] private GameObject ProjectilePrefab;
+    [SerializeField] private GameObject gooVisual;
+    [SerializeField] private GameObject gooVisual2;
+    private bool canSwitch=true;
+
 
     private void OnEnable()
     {
@@ -38,8 +42,68 @@ public class GooGun : MonoBehaviour
             goo.GetComponent<GooProjectile>().Spawn(this);
         }
     }
+    public void SwitchType(float y)
+    {
+        if (!canSwitch)
+        {
+            return;
+        }
+        canSwitch = false;
+        Invoke(nameof(ResetCanSwitch), 0.1f);
+        switch (GooType)
+        {
+            case GooGunMode.Bouncy:
+                if (y>0)
+                {
+                    GooType = GooGunMode.Sticky;
+                    gooVisual.GetComponent<MeshRenderer>().material.color = Color.green;
+                    gooVisual2.GetComponent<MeshRenderer>().material.color = Color.green;
+                }
+                else
+                {
+                    GooType = GooGunMode.Slipery;
+                    gooVisual.GetComponent<MeshRenderer>().material.color = Color.blue;
+                    gooVisual2.GetComponent<MeshRenderer>().material.color = Color.blue;
+                }
+                break;
+            case GooGunMode.Sticky:
+                if (y > 0)
+                {
+                    GooType = GooGunMode.Slipery;
+                    gooVisual.GetComponent<MeshRenderer>().material.color = Color.blue;
+                    gooVisual2.GetComponent<MeshRenderer>().material.color = Color.blue;
+                }
+                else
+                {
+                    GooType = GooGunMode.Bouncy;
+                    gooVisual.GetComponent<MeshRenderer>().material.color = Color.red;
+                    gooVisual2.GetComponent<MeshRenderer>().material.color = Color.red;
+                }
+                break;
+            case GooGunMode.Slipery:
+                if (y > 0)
+                {
+                    GooType = GooGunMode.Bouncy;
+                    gooVisual.GetComponent<MeshRenderer>().material.color = Color.red;
+                    gooVisual2.GetComponent<MeshRenderer>().material.color = Color.red;
+                }
+                else
+                {
+                    GooType = GooGunMode.Sticky;
+                    gooVisual.GetComponent<MeshRenderer>().material.color = Color.green;
+                    gooVisual2.GetComponent<MeshRenderer>().material.color = Color.green;
+                }
+                break;
+            default:
+                break;
+        }
+    }
     void ResetCanShoot()
     {
         CanShoot = true;
+    }
+    void ResetCanSwitch()
+    {
+        canSwitch = true;
     }
 }
