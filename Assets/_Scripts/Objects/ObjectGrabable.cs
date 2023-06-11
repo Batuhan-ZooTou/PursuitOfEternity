@@ -54,6 +54,12 @@ public class ObjectGrabable : MonoBehaviour
         objectRigidbody.useGravity = false;
 
     }
+    public void RobotHit()
+    {
+        insideSocket = false;
+        objectRigidbody.isKinematic = false;
+        socket.DeActivate();
+    }
     public void Drop()
     {
         //Physics.IgnoreLayerCollision(3, 6, false);

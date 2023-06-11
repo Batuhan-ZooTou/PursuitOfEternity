@@ -90,6 +90,10 @@ public class Interactor : MonoBehaviour
 
         }
     }
+    public void GetBrain(int brain)
+    {
+        GameManager.Instance.brains[brain - 1] = true;
+    }
     public void OnInteract(InputAction.CallbackContext context)
     {
         if (context.started)
