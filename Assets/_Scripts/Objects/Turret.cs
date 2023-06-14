@@ -1,4 +1,8 @@
 using UnityEngine;
+using System;
+using DG.Tweening;
+using System.Collections;
+using System.Collections.Generic;
 
 public class Turret : MonoBehaviour
 {
@@ -7,12 +11,12 @@ public class Turret : MonoBehaviour
     public GameObject bulletPrefab;
     public Transform firePoint;
     public float bulletSpeed = 5f;
-
-    private bool isFiring = false; // Ateşleme durumunu kontrol etmek için bir bayrak
+    private bool isFiring = false;
     private GameObject activeBullet;
-
+   
     private void Update()
     {
+        
         Vector3 turretPosition = transform.position;
         Vector3 playerPosition = player.position;
 
@@ -25,27 +29,23 @@ public class Turret : MonoBehaviour
             }
             else
             {
-              
+
                 Vector3 targetDirection = (playerPosition - activeBullet.transform.position).normalized;
                 activeBullet.GetComponent<Rigidbody>().velocity = targetDirection * bulletSpeed;
             }
         }
     }
-
     private void Fire()
     {
         isFiring = true;
-        
         activeBullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-
         activeBullet.GetComponent<Bullet>().SetTarget(player);
         Destroy(activeBullet, maxRange / bulletSpeed);
-        Invoke("ResetFiring", maxRange / bulletSpeed);
+        Invoke("ResetFiring", 1.5f);
     }
-
     private void ResetFiring()
     {
-        isFiring = false; 
+        isFiring = false;
     }
     private void OnDrawGizmosSelected()
     {

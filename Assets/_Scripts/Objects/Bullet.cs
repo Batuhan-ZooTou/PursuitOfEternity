@@ -22,22 +22,21 @@ public class Bullet : MonoBehaviour
         }
 
         Vector3 targetDirection = (target.position - transform.position).normalized;
-        transform.Translate(targetDirection * bulletSpeed * Time.deltaTime, Space.World);
-        
+        transform.Translate(transform.forward * bulletSpeed * Time.deltaTime, Space.World);
+
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            Rigidbody playerRb=other.gameObject.GetComponent<Rigidbody>();
-            if (playerRb!=null)
+            Rigidbody playerRb = other.gameObject.GetComponent<Rigidbody>();
+            if (playerRb != null)
             {
-                Vector3 knockbackDirection=(other.transform.position+transform.position);              
-                playerRb.AddForce(Vector3.forward*knockbackForce);
+                playerRb.AddForce(Vector3.forward * knockbackForce);
 
             }
         }
-        Destroy(gameObject,2f);
+        Destroy(gameObject, 2f);
     }
 }
