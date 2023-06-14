@@ -43,6 +43,13 @@ public class GooProjectile : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
+        if (paintColor==Color.blue)
+        {
+            if (collision.collider.TryGetComponent(out ObjectGrabable cube))
+            {
+                cube.RobotHit();
+            }
+        }
         Paintable p = collision.collider.GetComponent<Paintable>();
         if (p != null)
         {

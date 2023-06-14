@@ -31,7 +31,7 @@ public class Button : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.TryGetComponent<Rigidbody>(out var rigidbody))
+        if (collision.gameObject.TryGetComponent<ObjectGrabable>(out var ObjectGrabable))
         {
             OnPressed.Invoke();
             isActive = !isActive;

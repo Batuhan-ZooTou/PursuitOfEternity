@@ -18,6 +18,7 @@ public class ButtonPress : MonoBehaviour
     private float activeCounter;
     public bool hasTimer;
     public UnityEvent OnPressed;
+    public float pressDelay;
 
     private void Start()
     {
@@ -50,7 +51,7 @@ public class ButtonPress : MonoBehaviour
     }
     public void Pressed()
     {
-        OnPressed.Invoke();
+        Invoke(nameof(DelayedPress), pressDelay);
         if (platformPos == null)
         {
             isActive = !isActive;
@@ -89,5 +90,10 @@ public class ButtonPress : MonoBehaviour
             }
         }
         
+    }
+    public void DelayedPress()
+    {
+        OnPressed.Invoke();
+
     }
 }

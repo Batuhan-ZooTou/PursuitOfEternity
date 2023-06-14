@@ -19,7 +19,7 @@ public class MeleeBot : MonoBehaviour
     [SerializeField] ObjectGrabable cube;
     [SerializeField] bool canPunch=true;
      Vector3 centrePoint;
-    Socket socket;
+    [SerializeField] Socket socket;
     // Start is called before the first frame update
     void Start()
     {
@@ -30,6 +30,11 @@ public class MeleeBot : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (socket.cubeInside && state!=AIState.follow)
+        {
+            state = AIState.hitCube;
+            
+        }
         switch (state)
         {
             case AIState.patrol:
@@ -49,6 +54,18 @@ public class MeleeBot : MonoBehaviour
                 break;
             case AIState.hitCube:
                 agent.destination = socket.transform.position;
+                if (Vector3.Distance(transform.position, socket.transform.position) < 1f)
+                {
+                    Debug.Log("hitcube");
+                    cube.RobotHit();
+                    Vector3 point;
+                    if (RandomPoint(centrePoint, range, out point)) //pass in our centre point and radius of area
+                    {
+                        Debug.DrawRay(point, Vector3.up, Color.blue, 1.0f); //so you can see with gizmos
+                        agent.SetDestination(point);
+                    }
+                    state = AIState.patrol;
+                }
                 break;
             default:
                 break;
@@ -75,36 +92,6 @@ public class MeleeBot : MonoBehaviour
     }
     private void OnTriggerStay(Collider other)
     {
-        if (other.TryGetComponent(out socket))
-        {
-            if (socket.active)
-            {
-                state = AIState.hitCube;
-                if (Vector3.Distance(transform.position,socket.transform.position)<0.5f)
-                {
-                    cube.RobotHit();
-                    Vector3 point;
-                    if (RandomPoint(centrePoint, range, out point)) //pass in our centre point and radius of area
-                    {
-                        Debug.DrawRay(point, Vector3.up, Color.blue, 1.0f); //so you can see with gizmos
-                        agent.SetDestination(point);
-                    }
-                    state = AIState.patrol;
-
-
-                }
-            }
-        }
-        else if (other.TryGetComponent(out PlayerController playerController))
-        {
-            state = AIState.follow ;
-
-        }
-        else
-        {
-            state = AIState.patrol;
-
-        }
         if (!canPunch)
         {
             return;
@@ -118,6 +105,37 @@ public class MeleeBot : MonoBehaviour
                 Invoke(nameof(ResetPunch), punchTimer);
             }
             
+        }
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (state==AIState.follow)
+        {
+            return;
+        }
+        
+        if (other.TryGetComponent(out PlayerController playerController))
+        {
+            state = AIState.follow;
+
+        }
+        else
+        {
+            state = AIState.patrol;
+
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.TryGetComponent(out PlayerController playerController))
+        {
+            Vector3 point;
+            if (RandomPoint(centrePoint, range, out point)) //pass in our centre point and radius of area
+            {
+                Debug.DrawRay(point, Vector3.up, Color.blue, 1.0f); //so you can see with gizmos
+                agent.SetDestination(point);
+            }
+            state = AIState.patrol;
         }
     }
     public void ResetPunch()

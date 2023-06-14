@@ -30,6 +30,11 @@ public class ObjectGrabable : MonoBehaviour
     }
     public void ResetPosition()
     {
+        if (transform.parent != null)
+        {
+            transform.SetParent(null);
+            objectRigidbody.isKinematic = false;
+        }
         if (player!=null)
         {
             Drop();
@@ -41,6 +46,12 @@ public class ObjectGrabable : MonoBehaviour
     }
     public void Grab(Transform objectGrabPointTransform, Interactor _player)
     {
+        if (transform.parent!=null)
+        {
+            transform.SetParent(null);
+            objectRigidbody.constraints = RigidbodyConstraints.None;
+
+        }
         player = _player;
         //Physics.IgnoreLayerCollision(3, 6, true);
         if (insideSocket)
@@ -56,9 +67,13 @@ public class ObjectGrabable : MonoBehaviour
     }
     public void RobotHit()
     {
-        insideSocket = false;
-        objectRigidbody.isKinematic = false;
-        socket.DeActivate();
+        if (insideSocket)
+        {
+            insideSocket = false;
+            objectRigidbody.isKinematic = false;
+            socket.DeActivate();
+        }
+        
     }
     public void Drop()
     {
@@ -142,6 +157,8 @@ public class ObjectGrabable : MonoBehaviour
                     }
                     else if (maskColor.g != 0)
                     {
+                        objectRigidbody.constraints = RigidbodyConstraints.FreezeAll;
+                        transform.SetParent(collision.transform.parent);
                         Debug.Log("green");
                     }
                     else if (maskColor.b != 0)

@@ -44,3 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5c845ee2bb177b48af0573f0b62dc5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnTrigger:
+    m_PersistentCalls:
+      m_Calls: []
+  currentLvl: 0
+  lvls: 00000000
+  brains: 00000000

@@ -485,13 +485,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkPoint: {fileID: 0}
-  moveSpeed: 75
+  moveSpeed: 85
   groundMask:
     serializedVersion: 2
     m_Bits: 136
   groundCheck: {fileID: 1582236448}
   groundDistance: 0.02
-  jumpForce: 2.5
+  jumpForce: 2.7
   fallMultiplier: 1
   lowJumpMultiplier: 2
   isGrounded: 0

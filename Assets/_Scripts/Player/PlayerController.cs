@@ -37,7 +37,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float bounceMultiplier;
     [SerializeField] private float decreaseBouncePercentage;
     [SerializeField] private float thresholdYVelocity;
-
+    private bool isStuck;
+    private bool isJumping;
     public void OnMove(InputAction.CallbackContext context)
     {
         move = context.ReadValue<Vector2>();
@@ -160,10 +161,11 @@ public class PlayerController : MonoBehaviour
 
                         Debug.Log("TouchRed");
                     }
-                    else if (maskColor.g != 0)
+                    else if (maskColor.g != 0 && !isJumping)
                     {
-                        rigidbody.useGravity = false;
-                        rigidbody.velocity = Vector3.zero;
+                        transform.SetParent(collision.transform.parent);
+                        rigidbody.constraints = RigidbodyConstraints.FreezePosition;
+                        isStuck = true;
                         Debug.Log("Touchgreen");
                     }
                     else if (maskColor.b != 0)
@@ -189,6 +191,22 @@ public class PlayerController : MonoBehaviour
         else if(isGrounded)
         {
             airTime = 0;
+        }
+        if (isStuck)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                transform.SetParent(null);
+                rigidbody.constraints = RigidbodyConstraints.None;
+                rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
+                isJumping = true;
+                isStuck = false;
+                rigidbody.isKinematic = false;
+            }
+        }
+        else
+        {
+            isJumping = false;
         }
     }
     private void FixedUpdate()

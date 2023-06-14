@@ -15,6 +15,7 @@ public class Socket : MonoBehaviour
     public float[] platformDelays;
     public Transform holeTransform;
     public UnityEvent OnPressed;
+    public bool cubeInside;
     private void Start()
     {
         for (int i = 0; i < platformPos.Count; i++)
@@ -49,6 +50,7 @@ public class Socket : MonoBehaviour
             {
                 OnPressed.Invoke();
                 active = true;
+                cubeInside = true;
                 key.LockOnSocket(this);
                 key.Drop();
                 if (platformPos == null)
@@ -81,6 +83,7 @@ public class Socket : MonoBehaviour
     }
     IEnumerator Delay()
     {
+        cubeInside = false;
         yield return new WaitForSeconds(1);
         Debug.Log("exit");
         active = false;

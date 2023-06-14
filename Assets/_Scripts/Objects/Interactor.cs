@@ -42,7 +42,7 @@ public class Interactor : MonoBehaviour
     {
         if (context.started)
         {
-            if (gooGun!=null)
+            if (gooGun!=null && gooGun.gameObject.active)
             {
                 gooGun.Shoot();
             }

@@ -350,8 +350,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.12687683, y: 0.5, z: 0.12010574}
-  m_Center: {x: 0.061561584, y: 0, z: 0.06494713}
+  m_Size: {x: 0.12687683, y: 0.25181502, z: 0.12010574}
+  m_Center: {x: 0.061561584, y: -0.12409249, z: 0.06494713}
 --- !u!1 &6768624658303854057
 GameObject:
   m_ObjectHideFlags: 0
@@ -1797,3 +1797,6 @@ MonoBehaviour:
   platformStartDelays: []
   activeTime: 0
   hasTimer: 0
+  OnPressed:
+    m_PersistentCalls:
+      m_Calls: []
