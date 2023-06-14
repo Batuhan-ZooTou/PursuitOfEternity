@@ -7,8 +7,8 @@ public class PlayerController : MonoBehaviour
 {
     private float moveX, moveZ;
     private Rigidbody rigidbody;
-    [HideInInspector]public Transform checkPoint;
-    [SerializeField] private float moveSpeed;
+    [HideInInspector] public Transform checkPoint;
+    [SerializeField] public float moveSpeed;
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundDistance = 0.1f;
@@ -18,10 +18,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool isGrounded;
     [SerializeField] private bool onGoo;
     public bool isCrouching = false;
-    private bool isMoving;
+    public bool isMoving;
     MouseLook look;
     public Interactor interactor;
-    private Vector2 move; 
+    private Vector2 move;
     RaycastHit[] groundHits = new RaycastHit[2];
     public ForceMode force;
     bool onJumpPad;
@@ -32,22 +32,35 @@ public class PlayerController : MonoBehaviour
     Texture text;
     RenderTexture rText;
     Color maskColor;
-    private bool readyToJump=true;
-    [SerializeField] private float jumpCooldown=0.2f;
+    private bool readyToJump = true;
+    [SerializeField] private float jumpCooldown = 0.2f;
     [SerializeField] private float bounceMultiplier;
     [SerializeField] private float decreaseBouncePercentage;
     [SerializeField] private float thresholdYVelocity;
     private bool isStuck;
     private bool isJumping;
+
+    public PlayerController Instance;
     public void OnMove(InputAction.CallbackContext context)
     {
         move = context.ReadValue<Vector2>();
+    }
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
     private void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
         look = FindObjectOfType<MouseLook>();
-         tex = new Texture2D(1024, 1024, TextureFormat.RGB24, false);  
+        tex = new Texture2D(1024, 1024, TextureFormat.RGB24, false);
     }
     private void Update()
     {
@@ -67,7 +80,7 @@ public class PlayerController : MonoBehaviour
             {
                 if (objectUnder == interactor.grabbedObject)
                 {
-                    int hitCount = Physics.RaycastNonAlloc(groundCheck.position, Vector3.down, groundHits,groundDistance, groundMask);
+                    int hitCount = Physics.RaycastNonAlloc(groundCheck.position, Vector3.down, groundHits, groundDistance, groundMask);
                     if (hitCount >= 2)
                     {
                         isGrounded = true;
@@ -111,11 +124,11 @@ public class PlayerController : MonoBehaviour
                 if (maskColor.r != 0)
                 {
                     onGoo = true;
-                    if (airTime<0.15f)
+                    if (airTime < 0.15f)
                     {
                         return;
                     }
-                    rigidbody.AddForce(hit.normal * bounceMultiplier*airTime, force);
+                    rigidbody.AddForce(hit.normal * bounceMultiplier * airTime, force);
 
                     Debug.Log("Red");
                 }
@@ -183,12 +196,12 @@ public class PlayerController : MonoBehaviour
     }
     public void GetYVelocityMultiplier()
     {
-        if (!isGrounded && rigidbody.velocity.y<0)
+        if (!isGrounded && rigidbody.velocity.y < 0)
         {
             airTime += Time.deltaTime;
             airTime = Mathf.Clamp(airTime, 0, 2f);
         }
-        else if(isGrounded)
+        else if (isGrounded)
         {
             airTime = 0;
         }
@@ -303,6 +316,6 @@ public class PlayerController : MonoBehaviour
     }
     private void OnDrawGizmos()
     {
-        Debug.DrawRay(transform.position, Vector3.down*groundDistance, Color.green);
+        Debug.DrawRay(transform.position, Vector3.down * groundDistance, Color.green);
     }
 }

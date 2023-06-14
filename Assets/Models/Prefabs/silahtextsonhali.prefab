@@ -413,7 +413,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1035
+  m_VersionIndex: 1080
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -785,13 +785,14 @@ GameObject:
   m_Component:
   - component: {fileID: 7708868375279244767}
   - component: {fileID: 7039326728974716778}
+  - component: {fileID: -4961469713584204842}
   m_Layer: 0
   m_Name: silahtextsonhali
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7708868375279244767
 Transform:
   m_ObjectHideFlags: 0
@@ -799,7 +800,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7039326728974716773}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.572, y: -0.333, z: 0.725}
   m_LocalScale: {x: 0.564893, y: 0.564893, z: 0.41111523}
   m_ConstrainProportionsScale: 0
@@ -842,6 +843,23 @@ MonoBehaviour:
     type: 3}
   gooVisual: {fileID: 1928578661516596779}
   gooVisual2: {fileID: 1928578662597760816}
+--- !u!114 &-4961469713584204842
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7039326728974716773}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8dd66c501ed84d479fc9152579e1591, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slaySmooth: 8
+  slayMultiplier: 3
+  swingForce: 5
+  swingSpeed: 2
+  playerController: {fileID: 0}
 --- !u!1 &7421294472718991440
 GameObject:
   m_ObjectHideFlags: 0
