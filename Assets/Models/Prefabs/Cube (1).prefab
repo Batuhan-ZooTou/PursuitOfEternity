@@ -384,6 +384,10 @@ MonoBehaviour:
   moveSpeed: 1000
   snapped: 0
   socketspeed: 1
+  isStuck: 0
+  slideSpeed: 0
+  slippery: {fileID: 13400000, guid: 11f6189f93762c640b0b032d052a978e, type: 2}
+  normal: {fileID: 13400000, guid: 0b8243d605eb2bf4096a3600aef77d9d, type: 2}
   bounceMultiplier: 3
   decreaseBouncePercentage: 10
   thresholdVelocity: 0

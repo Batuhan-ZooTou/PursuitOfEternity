@@ -94,6 +94,24 @@ public class Interactor : MonoBehaviour
     {
         GameManager.Instance.brains[brain - 1] = true;
     }
+    public void AddGooType(int type)
+    {
+        GameManager.Instance.GooTypes[type] = true;
+    }
+    public void TakeNote(int note)
+    {
+        GameManager.Instance.Notes[note] = true;
+    }
+    public void OpenGUI()
+    {
+        Time.timeScale = 0;
+        Cursor.lockState = CursorLockMode.None;
+    }
+    public void CloseGUI()
+    {
+        Time.timeScale = 1;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
     public void OnInteract(InputAction.CallbackContext context)
     {
         if (context.started)

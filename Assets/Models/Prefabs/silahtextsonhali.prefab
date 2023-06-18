@@ -832,7 +832,7 @@ MonoBehaviour:
   GooType: 0
   GooSpawnPoint: {fileID: 1928578662209152789}
   shootDelay: 0
-  projectileSpeed: 5
+  projectileSpeed: 7.5
   SolidLayer:
     serializedVersion: 2
     m_Bits: 128

@@ -9,6 +9,7 @@ TagManager:
   - Socket1
   - interactableCube
   - WeightButton
+  - Climb
   layers:
   - Default
   - TransparentFX

@@ -13,7 +13,8 @@ public class WeightButton : MonoBehaviour
     public float moveTime;
     public bool isActive = false;
     public UnityEvent OnPressed;
-
+    public bool isDouble;
+    public WeightButton twin;
     private void Start()
     {
         for (int i = 0; i < platformPos.Count; i++)
@@ -26,8 +27,29 @@ public class WeightButton : MonoBehaviour
     {
         if (other.gameObject.CompareTag("WeightButton"))
         {
-            OnPressed.Invoke();
             isActive = true;
+            if (isDouble)
+            {
+                if (twin.isActive)
+                {
+                    OnPressed.Invoke();
+                    isActive = true;
+                    if (platformPos == null)
+                    {
+                        return;
+                    }
+                    //move to target position
+                    if (isActive)
+                    {
+                        for (int i = 0; i < platformPos.Count; i++)
+                        {
+                            platformPos[i].DOMove(platformTargetVector[i], moveTime);
+                        }
+                    }
+                }
+                return;
+            }
+            OnPressed.Invoke();
             if (platformPos == null)
             {
                 return;

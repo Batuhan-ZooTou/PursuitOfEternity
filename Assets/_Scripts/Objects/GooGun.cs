@@ -53,20 +53,41 @@ public class GooGun : MonoBehaviour
         switch (GooType)
         {
             case GooGunMode.Bouncy:
-                if (y>0)
+                if (!GameManager.Instance.GooTypes[0])
+                {
+                    return;
+                }
+                else if(GameManager.Instance.GooTypes[1])
+                {
+                    if (y > 0)
+                    {
+                        GooType = GooGunMode.Sticky;
+                        gooVisual.GetComponent<MeshRenderer>().material.color = Color.green;
+                        gooVisual2.GetComponent<MeshRenderer>().material.color = Color.green;
+                    }
+                    else
+                    {
+                        GooType = GooGunMode.Slipery;
+                        gooVisual.GetComponent<MeshRenderer>().material.color = Color.blue;
+                        gooVisual2.GetComponent<MeshRenderer>().material.color = Color.blue;
+                    }
+                }
+                else
                 {
                     GooType = GooGunMode.Sticky;
                     gooVisual.GetComponent<MeshRenderer>().material.color = Color.green;
                     gooVisual2.GetComponent<MeshRenderer>().material.color = Color.green;
                 }
-                else
-                {
-                    GooType = GooGunMode.Slipery;
-                    gooVisual.GetComponent<MeshRenderer>().material.color = Color.blue;
-                    gooVisual2.GetComponent<MeshRenderer>().material.color = Color.blue;
-                }
+                
                 break;
             case GooGunMode.Sticky:
+                if (!GameManager.Instance.GooTypes[1])
+                {
+                    GooType = GooGunMode.Bouncy;
+                    gooVisual.GetComponent<MeshRenderer>().material.color = Color.red;
+                    gooVisual2.GetComponent<MeshRenderer>().material.color = Color.red;
+                    return;
+                }
                 if (y > 0)
                 {
                     GooType = GooGunMode.Slipery;

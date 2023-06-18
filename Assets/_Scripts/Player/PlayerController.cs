@@ -13,12 +13,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundDistance = 0.1f;
     [SerializeField] private float jumpForce = 10f;
-    [SerializeField] private float fallMultiplier = 2.5f;
-    [SerializeField] private float lowJumpMultiplier = 2f;
     [SerializeField] private bool isGrounded;
     [SerializeField] private bool onGoo;
     public bool isCrouching = false;
-    private bool isMoving;
+    public bool isMoving;
     MouseLook look;
     public Interactor interactor;
     private Vector2 move; 
@@ -39,6 +37,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float thresholdYVelocity;
     private bool isStuck;
     private bool isJumping;
+    public float myspeed = 0.5f;
+    private bool isClimbing = false;
     public void OnMove(InputAction.CallbackContext context)
     {
         move = context.ReadValue<Vector2>();
@@ -55,9 +55,47 @@ public class PlayerController : MonoBehaviour
         UpdateJump();
         Crouch();
         GetYVelocityMultiplier();
+        Climbing();
+    }
+    
 
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Climb"))
+        {
+            isClimbing = false;
+        }
+    }
+    private void OnCollisionStay(Collision collision)
+    {
+        if (isClimbing)
+        {
+            rigidbody.velocity = Vector3.zero;
+            rigidbody.angularVelocity = Vector3.zero;
+        }
     }
 
+    void Climbing()
+    {
+        if (isClimbing)
+        {
+            if (move.y>0)
+            {
+                Debug.Log("w");
+                float verticalMove = Input.GetAxis("Vertical");
+
+                Vector3 move = new Vector3(0f, verticalMove * moveSpeed * Time.deltaTime , 0f);
+                rigidbody.velocity += move;
+            }
+            else if (move.y < 0)
+            {
+                float verticalMove = Input.GetAxis("Vertical");
+
+                Vector3 move = new Vector3(0f, verticalMove * moveSpeed * Time.deltaTime, 0f);
+                rigidbody.velocity += move;
+            }
+        }
+    }
     private void CheckForGround()
     {
         if (Physics.Raycast(groundCheck.position, Vector3.down, out RaycastHit hit, groundDistance, groundMask))
@@ -65,6 +103,13 @@ public class PlayerController : MonoBehaviour
             ObjectGrabable objectUnder;
             if (hit.transform.TryGetComponent(out objectUnder))
             {
+                if (objectUnder.isStuck)
+                {
+                    isGrounded = true;
+                    onJumpPad = false;
+                    return;
+                }
+
                 if (objectUnder == interactor.grabbedObject)
                 {
                     int hitCount = Physics.RaycastNonAlloc(groundCheck.position, Vector3.down, groundHits,groundDistance, groundMask);
@@ -76,6 +121,7 @@ public class PlayerController : MonoBehaviour
                     }
                     else
                     {
+                        Debug.Log("notbox");
                         isGrounded = false;
                     }
                 }
@@ -94,6 +140,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            Debug.Log("not");
             isGrounded = false;
         }
     }
@@ -164,7 +211,7 @@ public class PlayerController : MonoBehaviour
                     else if (maskColor.g != 0 && !isJumping)
                     {
                         transform.SetParent(collision.transform.parent);
-                        rigidbody.constraints = RigidbodyConstraints.FreezePosition;
+                        rigidbody.constraints = RigidbodyConstraints.FreezeAll;
                         isStuck = true;
                         Debug.Log("Touchgreen");
                     }
@@ -257,23 +304,6 @@ public class PlayerController : MonoBehaviour
     {
         readyToJump = true;
     }
-    private void FixedJump()
-    {
-        if (!isGrounded) return;
-        if (isCrouching) return;
-
-        if (rigidbody.velocity.y < 0)
-        {
-            rigidbody.velocity += Vector3.up * Physics.gravity.y * (fallMultiplier - 1) * Time.fixedDeltaTime;
-        }
-        else if (rigidbody.velocity.y > 0 && !Input.GetKey(KeyCode.Space))
-        {
-            rigidbody.velocity += Vector3.up * Physics.gravity.y * (lowJumpMultiplier - 1) * Time.fixedDeltaTime;
-        }
-
-
-        //isGrounded = Physics.CheckSphere(groundCheck.position, 0.1f, groundMask);
-    }
     private void Crouch()
     {
 
@@ -299,6 +329,12 @@ public class PlayerController : MonoBehaviour
         if (other.TryGetComponent(out JumpPad pad))
         {
             onJumpPad = true;
+        }
+        if (other.CompareTag("Climb"))
+        {
+
+            isClimbing = true;
+
         }
     }
     private void OnDrawGizmos()

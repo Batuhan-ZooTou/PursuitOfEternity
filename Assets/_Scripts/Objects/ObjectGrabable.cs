@@ -14,7 +14,11 @@ public class ObjectGrabable : MonoBehaviour
     public bool snapped;
     public float socketspeed;
     private Vector3 spawnPosition;
-
+    public bool isStuck;
+    private Vector3 dir;
+    public float slideSpeed;
+    public PhysicMaterial slippery;
+    public PhysicMaterial normal;
     Texture2D tex;
     Texture text;
     RenderTexture rText;
@@ -50,9 +54,11 @@ public class ObjectGrabable : MonoBehaviour
         {
             transform.SetParent(null);
             objectRigidbody.constraints = RigidbodyConstraints.None;
+            isStuck = false;
 
         }
         player = _player;
+
         //Physics.IgnoreLayerCollision(3, 6, true);
         if (insideSocket)
         {
@@ -107,6 +113,7 @@ public class ObjectGrabable : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        Slide();
         if (objectGrabPointTransform != null)
         {
             if (Physics.Raycast(transform.position,(player.cam.transform.position-transform.position).normalized,0.4f,player.barrier))
@@ -128,16 +135,45 @@ public class ObjectGrabable : MonoBehaviour
             objectRigidbody.velocity = DirectionToPoint.normalized * moveSpeed * DistanceToPoint*Time.fixedDeltaTime;
         }
     }
+    public void Slide()
+    {
+        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 0.8f))
+        {
+            if (hit.collider.TryGetComponent<Paintable>(out var paintable))
+            {
+                if (paintable != null)
+                {
+                    //if (objectGrabPointTransform!=null)
+                    //{
+                    //    return;
+                    //}
+                    rText = null;
+                    rText = paintable.getMask();
+                    tex = rText.toTexture2D();
+                    text = paintable.GetComponent<MeshRenderer>().material.GetTexture("Texture2D_41271c3c5f484ca2a435c65087a81705");
+                    maskColor = tex.GetPixel(Mathf.FloorToInt(hit.textureCoord.x * text.width), Mathf.FloorToInt(hit.textureCoord.y * text.height));
+
+                    if (maskColor.b != 0)
+                    {
+                        GetComponent<Collider>().material = slippery;
+                        Debug.Log("bluestay");
+                    }
+                    return;
+                }
+            }
+            GetComponent<Collider>().material = normal;
+        }
+    }
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.collider.TryGetComponent<Paintable>(out var paintable))
         {
             if (paintable!=null)
             {
-                if (objectGrabPointTransform!=null)
-                {
-                    return;
-                }
+                //if (objectGrabPointTransform!=null)
+                //{
+                //    return;
+                //}
                 Debug.DrawRay(transform.position, (collision.contacts[0].point - transform.position).normalized * transform.localScale.x, Color.red);
                 if (Physics.Raycast(transform.position, (collision.contacts[0].point - transform.position).normalized, out RaycastHit raycastHit, transform.localScale.x))
                 {
@@ -157,12 +193,17 @@ public class ObjectGrabable : MonoBehaviour
                     }
                     else if (maskColor.g != 0)
                     {
+                        transform.rotation = Quaternion.Euler(Vector2.zero);
                         objectRigidbody.constraints = RigidbodyConstraints.FreezeAll;
                         transform.SetParent(collision.transform.parent);
+                        Drop();
                         Debug.Log("green");
+                        isStuck = true;
                     }
                     else if (maskColor.b != 0)
                     {
+                        Debug.Log(raycastHit.normal);
+                        dir = new Vector3(objectRigidbody.velocity.normalized.x,0, objectRigidbody.velocity.normalized.z);
                         Debug.Log("blue");
                     }
                     else
@@ -171,7 +212,6 @@ public class ObjectGrabable : MonoBehaviour
                     }
                 }
             }
-            
         }
     }
 }
